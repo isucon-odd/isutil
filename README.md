@@ -5,7 +5,7 @@ ISUCON用のGo言語ユーティリティパッケージです。
 ## インストール
 
 ```sh
-go get github.com/isucon/isutil
+go get github.com/isucon-odd/isutil
 ```
 
 ## パッケージの内容
