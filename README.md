@@ -1,6 +1,6 @@
 # isucon-odd/isutil
 
-ISUCON用のGo言語ユーティリティパッケージです。
+ISUCON用のGo言語ユーティリティです。
 
 ## インストール
 
@@ -8,9 +8,9 @@ ISUCON用のGo言語ユーティリティパッケージです。
 go get github.com/isucon-odd/isutil
 ```
 
-## パッケージの内容
+## モジュールの内容
 
-### キャッシュ
+### cache
 
 ジェネリクスを使ったキャッシュです。有効期限の設定も可能です。
 
