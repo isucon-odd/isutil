@@ -4,24 +4,17 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/samber/lo"
 )
 
 func whereIn[T any](selectFn func(dest any, query string, args ...any) error, query string, args ...any) ([]T, error) {
-	if len(args) == 0 {
-		return []T{}, nil
-	}
+	var result []T
 
-	uniqArgs := lo.Uniq(args)
-
-	query, args, err := sqlx.In(query, uniqArgs)
+	_query, _args, err := sqlx.In(query, args...)
 	if err != nil {
 		return []T{}, err
 	}
 
-	result := []T{}
-
-	err = selectFn(&result, query, args...)
+	err = selectFn(&result, _query, _args...)
 	if err != nil {
 		return []T{}, err
 	}
