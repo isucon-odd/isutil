@@ -34,3 +34,34 @@ func main() {
 	cache.GetAndDeleteExpired("key")
 }
 ```
+
+### sqlutil
+
+SQLクエリの実行を簡単にするためのユーティリティです。
+
+#### WHERE IN
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/isucon-odd/isutil/sqlutil"
+)
+
+func main(ctx context.Context, db *sqlx.DB, tx *sqlx.Tx) {
+	var users []User
+	var err error
+
+	query := "SELECT * FROM users WHERE id IN (?)"
+	userIDs := []int{1, 2, 3}
+
+	users, err = WhereIn[User](db, query, userIDs)
+	users, err = WhereInContext[User](ctx, db, query, userIDs)
+
+	users, err = TxWhereIn[User](tx, query, userIDs)
+	users, err = TxWhereInContext[User](ctx, tx, query, userIDs)
+}
+```
