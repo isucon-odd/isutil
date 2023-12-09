@@ -7,14 +7,14 @@ import (
 	"github.com/samber/lo"
 )
 
-func whereIn[T any](query string, values []any, selectFn func(dest interface{}, query string, args ...interface{}) error) ([]T, error) {
-	if len(values) == 0 {
+func whereIn[T any](selectFn func(dest any, query string, args ...any) error, query string, args ...any) ([]T, error) {
+	if len(args) == 0 {
 		return []T{}, nil
 	}
 
-	uniqueValues := lo.Uniq(values)
+	uniqArgs := lo.Uniq(args)
 
-	query, args, err := sqlx.In(query, uniqueValues)
+	query, args, err := sqlx.In(query, uniqArgs)
 	if err != nil {
 		return []T{}, err
 	}
@@ -29,26 +29,26 @@ func whereIn[T any](query string, values []any, selectFn func(dest interface{}, 
 	return result, nil
 }
 
-func WhereIn[T any](db *sqlx.DB, query string, values []any) ([]T, error) {
-	return whereIn[T](query, values, db.Select)
+func WhereIn[T any](db *sqlx.DB, query string, args ...any) ([]T, error) {
+	return whereIn[T](db.Select, query, args)
 }
 
-func TxWhereIn[T any](tx *sqlx.Tx, query string, values []any) ([]T, error) {
-	return whereIn[T](query, values, tx.Select)
+func TxWhereIn[T any](tx *sqlx.Tx, query string, args ...any) ([]T, error) {
+	return whereIn[T](tx.Select, query, args)
 }
 
-func WhereInContext[T any](ctx context.Context, db *sqlx.DB, query string, values []any) ([]T, error) {
-	selectFn := func(dest interface{}, query string, args ...interface{}) error {
+func WhereInContext[T any](ctx context.Context, db *sqlx.DB, query string, args ...any) ([]T, error) {
+	selectFn := func(dest any, query string, args ...any) error {
 		return db.SelectContext(ctx, dest, query, args...)
 	}
 
-	return whereIn[T](query, values, selectFn)
+	return whereIn[T](selectFn, query, args)
 }
 
-func TxWhereInContext[T any](ctx context.Context, tx *sqlx.Tx, query string, values []any) ([]T, error) {
-	selectFn := func(dest interface{}, query string, args ...interface{}) error {
+func TxWhereInContext[T any](ctx context.Context, tx *sqlx.Tx, query string, args ...any) ([]T, error) {
+	selectFn := func(dest any, query string, args ...any) error {
 		return tx.SelectContext(ctx, dest, query, args...)
 	}
 
-	return whereIn[T](query, values, selectFn)
+	return whereIn[T](selectFn, query, args)
 }
