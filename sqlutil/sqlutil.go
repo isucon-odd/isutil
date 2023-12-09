@@ -23,11 +23,11 @@ func whereIn[T any](selectFn func(dest any, query string, args ...any) error, qu
 }
 
 func WhereIn[T any](db *sqlx.DB, query string, args ...any) ([]T, error) {
-	return whereIn[T](db.Select, query, args)
+	return whereIn[T](db.Select, query, args...)
 }
 
 func TxWhereIn[T any](tx *sqlx.Tx, query string, args ...any) ([]T, error) {
-	return whereIn[T](tx.Select, query, args)
+	return whereIn[T](tx.Select, query, args...)
 }
 
 func WhereInContext[T any](ctx context.Context, db *sqlx.DB, query string, args ...any) ([]T, error) {
@@ -35,7 +35,7 @@ func WhereInContext[T any](ctx context.Context, db *sqlx.DB, query string, args 
 		return db.SelectContext(ctx, dest, query, args...)
 	}
 
-	return whereIn[T](selectFn, query, args)
+	return whereIn[T](selectFn, query, args...)
 }
 
 func TxWhereInContext[T any](ctx context.Context, tx *sqlx.Tx, query string, args ...any) ([]T, error) {
@@ -43,5 +43,5 @@ func TxWhereInContext[T any](ctx context.Context, tx *sqlx.Tx, query string, arg
 		return tx.SelectContext(ctx, dest, query, args...)
 	}
 
-	return whereIn[T](selectFn, query, args)
+	return whereIn[T](selectFn, query, args...)
 }
