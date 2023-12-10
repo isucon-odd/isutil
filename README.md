@@ -43,9 +43,7 @@ SQLクエリの実行を簡単にするためのユーティリティです。
 
 WHERE IN句を使ったクエリを実行するためのユーティリティです。
 
-内部で`sqlx.Select`を使う`WhereIn`と、`sqlx.SelectContext`を使う`WhereInContext`があります。
-
-これらの関数は、`*sqlx.DB`と`*sqlx.Tx`の両方を受け取ることができます。
+内部で`sqlx.Select`関数を使う`WhereIn`と、`sqlx.SelectContext`関数を使う`WhereInContext`があります。これらの関数は、`*sqlx.DB`と`*sqlx.Tx`の両方を受け取ることができます。
 
 ```go
 package main
@@ -57,14 +55,15 @@ import (
 	"github.com/isucon-odd/isutil/sqlutil"
 )
 
-func main(ctx context.Context, db *sqlx.DB, tx *sqlx.Tx) {
-	var users []User
-	var err error
+type User struct {
+	// ...
+}
 
+func main(ctx context.Context, db *sqlx.DB, tx *sqlx.Tx) {
 	query := "SELECT * FROM users WHERE id IN (?)"
 	userIDs := []int{1, 2, 3}
 
-	users, err = WhereIn[User](db, query, userIDs)
+	users, err := WhereIn[User](db, query, userIDs)
 	users, err = WhereIn[User](tx, query, userIDs)
 
 	users, err = WhereInContext[User](ctx, db, query, userIDs)
