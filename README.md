@@ -41,6 +41,12 @@ SQLクエリの実行を簡単にするためのユーティリティです。
 
 #### WHERE IN
 
+WHERE IN句を使ったクエリを実行するためのユーティリティです。
+
+内部で`sqlx.Select`を使う`WhereIn`と、`sqlx.SelectContext`を使う`WhereInContext`があります。
+
+これらの関数は、`*sqlx.DB`と`*sqlx.Tx`の両方を受け取ることができます。
+
 ```go
 package main
 
@@ -59,9 +65,9 @@ func main(ctx context.Context, db *sqlx.DB, tx *sqlx.Tx) {
 	userIDs := []int{1, 2, 3}
 
 	users, err = WhereIn[User](db, query, userIDs)
-	users, err = WhereInContext[User](ctx, db, query, userIDs)
+	users, err = WhereIn[User](tx, query, userIDs)
 
-	users, err = TxWhereIn[User](tx, query, userIDs)
-	users, err = TxWhereInContext[User](ctx, tx, query, userIDs)
+	users, err = WhereInContext[User](ctx, db, query, userIDs)
+	users, err = WhereInContext[User](ctx, tx, query, userIDs)
 }
 ```

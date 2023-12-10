@@ -6,6 +6,28 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+func getSelectFn(dbtx any) func(dest any, query string, args ...any) error {
+	switch dbtx := dbtx.(type) {
+	case *sqlx.DB:
+		return dbtx.Select
+	case *sqlx.Tx:
+		return dbtx.Select
+	default:
+		panic("invalid type")
+	}
+}
+
+func getSelectContextFn(dbtx any) func(ctx context.Context, dest any, query string, args ...any) error {
+	switch dbtx := dbtx.(type) {
+	case *sqlx.DB:
+		return dbtx.SelectContext
+	case *sqlx.Tx:
+		return dbtx.SelectContext
+	default:
+		panic("invalid type")
+	}
+}
+
 func whereIn[T any, S any](selectFn func(dest any, query string, args ...any) error, query string, args []S) ([]T, error) {
 	if len(args) == 0 {
 		return []T{}, nil
@@ -26,25 +48,13 @@ func whereIn[T any, S any](selectFn func(dest any, query string, args ...any) er
 	return result, nil
 }
 
-func WhereIn[T any, S any](db *sqlx.DB, query string, args []S) ([]T, error) {
-	return whereIn[T](db.Select, query, args)
+func WhereIn[T any, S any, DBTX sqlx.DB | sqlx.Tx](dbtx *DBTX, query string, args []S) ([]T, error) {
+	return whereIn[T](getSelectFn(dbtx), query, args)
 }
 
-func TxWhereIn[T any, S any](tx *sqlx.Tx, query string, args []S) ([]T, error) {
-	return whereIn[T](tx.Select, query, args)
-}
-
-func WhereInContext[T any, S any](ctx context.Context, db *sqlx.DB, query string, args []S) ([]T, error) {
+func WhereInContext[T any, S any, DBTX sqlx.DB | sqlx.Tx](ctx context.Context, dbtx *DBTX, query string, args []S) ([]T, error) {
 	selectFn := func(dest any, query string, args ...any) error {
-		return db.SelectContext(ctx, dest, query, args...)
-	}
-
-	return whereIn[T](selectFn, query, args)
-}
-
-func TxWhereInContext[T any, S any](ctx context.Context, tx *sqlx.Tx, query string, args []S) ([]T, error) {
-	selectFn := func(dest any, query string, args ...any) error {
-		return tx.SelectContext(ctx, dest, query, args...)
+		return getSelectContextFn(dbtx)(ctx, dest, query, args...)
 	}
 
 	return whereIn[T](selectFn, query, args)
