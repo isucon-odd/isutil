@@ -50,12 +50,12 @@ func TestWhereInDB(t *testing.T) {
 		expected []User
 	}{
 		{
-			name:     "Empty args",
+			name:     "EmptyArgs",
 			args:     []int{},
 			expected: []User{},
 		},
 		{
-			name: "Single arg",
+			name: "SingleArg",
 			args: []int{1},
 			expected: []User{
 				{
@@ -67,7 +67,7 @@ func TestWhereInDB(t *testing.T) {
 			},
 		},
 		{
-			name: "Multiple args",
+			name: "MultipleArgs",
 			args: []int{1, 2},
 			expected: []User{
 				{
@@ -111,12 +111,12 @@ func TestWhereInTx(t *testing.T) {
 		expected []User
 	}{
 		{
-			name:     "Empty args",
+			name:     "EmptyArgs",
 			args:     []int{},
 			expected: []User{},
 		},
 		{
-			name: "Single arg",
+			name: "SingleArg",
 			args: []int{1},
 			expected: []User{
 				{
@@ -128,7 +128,7 @@ func TestWhereInTx(t *testing.T) {
 			},
 		},
 		{
-			name: "Multiple args",
+			name: "MultipleArgs",
 			args: []int{1, 2},
 			expected: []User{
 				{
@@ -171,12 +171,12 @@ func TestWhereInContextDB(t *testing.T) {
 		expected []User
 	}{
 		{
-			name:     "Empty args",
+			name:     "EmptyArgs",
 			args:     []int{},
 			expected: []User{},
 		},
 		{
-			name: "Single arg",
+			name: "SingleArg",
 			args: []int{1},
 			expected: []User{
 				{
@@ -188,7 +188,7 @@ func TestWhereInContextDB(t *testing.T) {
 			},
 		},
 		{
-			name: "Multiple args",
+			name: "MultipleArgs",
 			args: []int{1, 2},
 			expected: []User{
 				{
@@ -234,12 +234,12 @@ func TestWhereInContextTx(t *testing.T) {
 		expected []User
 	}{
 		{
-			name:     "Empty args",
+			name:     "EmptyArgs",
 			args:     []int{},
 			expected: []User{},
 		},
 		{
-			name: "Single arg",
+			name: "SingleArg",
 			args: []int{1},
 			expected: []User{
 				{
@@ -251,7 +251,7 @@ func TestWhereInContextTx(t *testing.T) {
 			},
 		},
 		{
-			name: "Multiple args",
+			name: "MultipleArgs",
 			args: []int{1, 2},
 			expected: []User{
 				{
